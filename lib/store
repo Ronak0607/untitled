@@ -1,0 +1,30 @@
+Expanded(
+            child: FutureBuilder<Modeldata>(
+                future: controller.ApiCall(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text("${snapshot.error}");
+                  } else if (snapshot.hasData) {
+                    Modeldata m1 = snapshot.data!;
+                    return ListView.builder(
+                        itemCount: m1.articles!.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text("${m1.articles![index].title}"),
+                          );
+                        });
+                  }
+                  return Center(child: CircularProgressIndicator());
+                }),
+          )
+
+
+          Future<List<Map>> readData() async {
+              db = await checkDatabase();
+              String query = "SELECT * FROM apidata";
+              List<Map> lastlist = await db!.rawQuery(query, null);
+
+              return lastlist;
+            }
+
+
